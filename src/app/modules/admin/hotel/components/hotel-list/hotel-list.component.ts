@@ -13,13 +13,17 @@ export class HotelListComponent implements OnInit {
 
   private dialog: Dialog = inject(Dialog);
   private hotelService: HotelService = inject(HotelService);
-  private authService: AuthService = inject(AuthService);
-  // userId: string | undefined = this.authService.user?.uid;  // mirar como hacer que funcione rápido
 
   hotels: Hotel[] = [];
+  originalHotels: Hotel[] = [];
+  searchCriteria: any = {
+    checkInDate: '',
+    checkOutDate: '',
+    capacity: 1,
+    city: '',
+  };
 
   ngOnInit() {
-    // Obtener todos los hoteles
     const userId = localStorage.getItem('userId');
     this.hotelService.getHotelsByUser(userId as string).subscribe((hotelsSnapshot: any) => {
       this.hotels = [];
@@ -30,6 +34,7 @@ export class HotelListComponent implements OnInit {
         });
       });
     });
+    this.originalHotels = this.hotels;
   }
 
   openCreateHotelModal( hotel: any | null = null ) {
@@ -48,6 +53,39 @@ export class HotelListComponent implements OnInit {
       }
     });
 
+  }
+
+  searchHotels() {
+    // Restaura la lista original de hoteles si los criterios de búsqueda están vacíos
+    if (!this.searchCriteria.checkInDate && !this.searchCriteria.checkOutDate &&
+      !this.searchCriteria.numPeople && !this.searchCriteria.city) {
+      this.hotels = this.originalHotels;
+      return;
+    }
+
+    // Realiza la búsqueda en la lista original de hoteles
+    const filteredHotels = this.originalHotels.filter(hotel => {
+      // Ajusta los criterios de búsqueda según tus necesidades
+      return (
+        (!this.searchCriteria.city || hotel.city.toLowerCase() === this.searchCriteria.city.toLowerCase())
+      );
+    });
+
+    console.log('Resultados de búsqueda:', filteredHotels);
+
+    // Actualiza la lista de hoteles con los resultados filtrados
+    this.hotels = filteredHotels;
+
+  }
+
+  // Función para verificar si las fechas están en el rango
+  isDateInRange(checkInDate: Date, checkOutDate: Date): boolean {
+    const startDate = new Date(this.searchCriteria.checkInDate);
+    const endDate = new Date(this.searchCriteria.checkOutDate);
+    const hotelCheckInDate = new Date(checkInDate);
+    const hotelCheckOutDate = new Date(checkOutDate);
+
+    return hotelCheckInDate >= startDate && hotelCheckOutDate <= endDate;
   }
 
 }

@@ -1,1 +1,28 @@
-<p>hotel-list works!</p>
+<div class="container mx-auto my-8">
+  <h1 class="text-3xl font-bold mb-4">Hoteles</h1>
+  <form #f="ngForm" (ngSubmit)="searchHotels()" class="mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Campos de búsqueda (fecha de entrada, fecha de salida, cantidad de personas, ciudad) -->
+      <input [(ngModel)]="searchCriteria.checkInDate" [ngModelOptions]="{standalone: true}" type="date" placeholder="Fecha de entrada">
+      <input [(ngModel)]="searchCriteria.checkOutDate" [ngModelOptions]="{standalone: true}" type="date" placeholder="Fecha de salida">
+      <input [(ngModel)]="searchCriteria.capacity" [ngModelOptions]="{standalone: true}" type="number" placeholder="Cantidad de personas">
+      <input [(ngModel)]="searchCriteria.city" [ngModelOptions]="{standalone: true}" type="text" placeholder="Ciudad">
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-700">
+        Buscar Hoteles
+      </button>
+    </div>
+  </form>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div *ngFor="let hotel of hotels"
+         class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
+      <img [src]="hotel.imageUrl" alt="Hotel" class="w-full h-40 object-cover rounded">
+      <h2 class="text-xl font-semibold mt-2">{{ hotel.name }}</h2>
+      <p class="text-gray-600">{{ hotel.city }}</p>
+      <p class="text-gray-700 my-2">{{ hotel.description }}</p>
+      <p class="text-gray-700">{{ hotel.price | currency }}</p>
+      <div class="mt-4 flex justify-end">
+        <button (click)="openReservationModal(hotel)" class="text-blue-500 hover:underline">Reservar</button>
+      </div>
+    </div>
+  </div>
+</div>

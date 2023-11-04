@@ -27,7 +27,6 @@ export class HotelService {
 
   // Obtener hoteles por usuario
   getHotelsByUser(userId: string) {
-    console.log(userId);
     return this.fireStore.collection('hotels', ref => ref.where('userId', '==', userId)).snapshotChanges();
   }
 

@@ -41,7 +41,7 @@ export class HotelDetailsComponent implements OnInit {
       name: [this.hotel ? this.hotel.name : '', Validators.required],
       city: [this.hotel ? this.hotel.city : '', Validators.required],
       description: [this.hotel ? this.hotel.description : '', Validators.required],
-      price: [this.hotel ? this.hotel.price : 0, Validators.required],
+      /*price: [this.hotel ? this.hotel.price : 0, Validators.required],*/
       isDisabled: this.hotel ? this.hotel.isDisabled : true,
       rooms: this.fb.array([]),
     });

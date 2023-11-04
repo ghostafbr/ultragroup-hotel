@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HotelListComponent } from './components/hotel-list/hotel-list.component';
 import { HotelDetailsComponent } from './components/hotel-details/hotel-details.component';
 import {HotelRoutingModule} from "./hotel-routing.module";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {DialogModule} from "@angular/cdk/dialog";
 
 
@@ -17,7 +17,8 @@ import {DialogModule} from "@angular/cdk/dialog";
     CommonModule,
     HotelRoutingModule,
     DialogModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
   ]
 })
 export class HotelModule { }

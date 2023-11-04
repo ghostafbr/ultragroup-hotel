@@ -28,7 +28,6 @@ export class AuthService {
           .subscribe( (firestoreUser: any) => {
             this._user = firestoreUser as User;
             // this.store.dispatch( actions.setUser({ user }));
-            console.log('this._user', this._user);
           });
 
       } else {

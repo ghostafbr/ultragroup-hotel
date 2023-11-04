@@ -5,7 +5,7 @@ export interface Hotel {
   name: string; // Nombre del hotel
   city: string; // Ubicación del hotel
   description: string; // Descripción del hotel
-  price: number; // Precio base del hotel
+  /*price: number;*/
   isDisabled: boolean; // Indica si el hotel está deshabilitado
   rooms: Room[]; // Lista de habitaciones disponibles en el hotel
   imageUrl: string; // URL de la imagen del hotel
