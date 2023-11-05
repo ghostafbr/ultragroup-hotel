@@ -6,7 +6,7 @@ import {AuthService} from "./core/services/auth.service";
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent {
-  title = 'ultragroup-hotel';
+  title = 'UltraGroup Reservation App';
 
   private authService: AuthService = inject(AuthService);
 
