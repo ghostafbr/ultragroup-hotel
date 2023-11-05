@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {AuthService} from "../../../../core/services/auth.service";
 import {Router} from "@angular/router";
@@ -9,16 +9,25 @@ import {Router} from "@angular/router";
   imports: [CommonModule],
   templateUrl: './navbar.component.html'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   private authService: AuthService = inject(AuthService);
-  private router: Router = inject(Router);
+  private router: Router = inject(Router)
+  showOptions = false;
 
   logout() {
     this.authService.logout().then(() => {
-      localStorage.clear();
       this.router.navigate(['/login']);
     });
+  }
+
+  ngOnInit() {
+    this.hideOptions();
+  }
+
+  hideOptions() {
+    const currentURL = this.router.url;
+    this.showOptions = currentURL.includes('admin');
   }
 
 }

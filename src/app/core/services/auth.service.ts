@@ -2,7 +2,9 @@ import {inject, Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {User} from "../models/user.model";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {Subscription} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
+import {Router} from "@angular/router";
+import {MessageService} from "./message.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,31 +13,30 @@ export class AuthService {
 
   private afAuth: AngularFireAuth = inject(AngularFireAuth);
   private fireStore: AngularFirestore = inject(AngularFirestore);
+  private messageService: MessageService = inject(MessageService);
 
   userSubscription: Subscription | undefined | null;
   private _user: User | null = null;
+  private router: Router = inject(Router);
+
+  user$ = new BehaviorSubject<User | null>(null);
 
 
   get user() {
-    return this._user;
+    return this.user$.getValue();
   }
 
   initAuthListener() {
-    this.afAuth.authState.subscribe( fbUser => {
-      if ( fbUser ) {
-        // exists
+    this.afAuth.authState.subscribe(fbUser => {
+      if (fbUser) {
         this.userSubscription = this.fireStore.collection('users').doc(fbUser.uid).valueChanges()
-          .subscribe( (firestoreUser: any) => {
+          .subscribe((firestoreUser: any) => {
             this._user = firestoreUser as User;
-            // this.store.dispatch( actions.setUser({ user }));
           });
 
       } else {
-        // doesn't exist
         this._user = null;
         this.userSubscription?.unsubscribe();
-        /*this.store.dispatch( actions.unSetUser() );
-        this.store.dispatch( incomeExpenseActions.unSetItems() );*/
       }
     });
   }
@@ -57,6 +58,10 @@ export class AuthService {
   }
 
   logout() {
+    this._user = null;
+    this.user$.next(null);
+    localStorage.clear();
+    this.userSubscription?.unsubscribe();
     return this.afAuth.signOut();
   }
 
