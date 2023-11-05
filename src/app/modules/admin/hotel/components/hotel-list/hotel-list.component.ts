@@ -3,6 +3,7 @@ import {HotelDetailsComponent} from "../hotel-details/hotel-details.component";
 import { Dialog } from '@angular/cdk/dialog';
 import {HotelService} from "../../../../../core/services/hotel.service";
 import {Hotel} from "../../../../../core/models/hotel.model";
+import {MessageService} from "../../../../../core/services/message.service";
 
 @Component({
   selector: 'app-hotel-list',
@@ -12,6 +13,7 @@ export class HotelListComponent implements OnInit {
 
   private dialog: Dialog = inject(Dialog);
   private hotelService: HotelService = inject(HotelService);
+  private messageService: MessageService = inject(MessageService);
 
   hotels: Hotel[] = [];
   originalHotels: Hotel[] = [];
@@ -23,7 +25,12 @@ export class HotelListComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.getHotels();
+  }
+
+  getHotels() {
     const userId = localStorage.getItem('userId');
+    this.messageService.showLoading('Cargando hoteles...');
     this.hotelService.getHotelsByUser(userId as string).subscribe((hotelsSnapshot: any) => {
       this.hotels = [];
       hotelsSnapshot.forEach((hotelData: any) => {
@@ -32,6 +39,7 @@ export class HotelListComponent implements OnInit {
           ...hotelData.payload.doc.data()
         });
       });
+      this.messageService.close();
     });
     this.originalHotels = this.hotels;
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import Swal from "sweetalert2";
 
 @Injectable({
@@ -33,13 +33,17 @@ export class MessageService {
     })
   }
 
-  showLoading() {
+  showLoading(message?: string) {
     Swal.fire({
-      title: 'Cargando...',
+      title: message || 'Cargando...',
       didOpen: () => {
         Swal.showLoading()
       },
     });
+  }
+
+  close() {
+    Swal.close();
   }
 
 }
