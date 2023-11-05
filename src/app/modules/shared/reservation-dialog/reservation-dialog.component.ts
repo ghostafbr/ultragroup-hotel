@@ -21,8 +21,8 @@ export class ReservationDialogComponent implements OnInit {
   public dialogRef: DialogRef<string> = inject(DialogRef);
   private roomService: RoomService = inject(RoomService);
   private messageService: MessageService = inject(MessageService);
-
   private reservationService: ReservationService = inject(ReservationService);
+
   reservationForm!: FormGroup;
   hotel: Hotel;
   availableRooms: Room[] = [];

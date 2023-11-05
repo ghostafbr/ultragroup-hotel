@@ -6,6 +6,7 @@ import {RoomService} from "../../../../../core/services/room.service";
 import {Guest} from "../../../../../core/models/guest.model";
 import {GuestService} from "../../../../../core/services/guest.service";
 import {EmergencyContactService} from "../../../../../core/services/emergency-contact.service";
+import {MessageService} from "../../../../../core/services/message.service";
 
 @Component({
   selector: 'app-reservation-details',
@@ -13,10 +14,9 @@ import {EmergencyContactService} from "../../../../../core/services/emergency-co
 })
 export class ReservationDetailsComponent implements OnInit {
 
-  public dialogRef: DialogRef<ReservationDetailsComponent> = inject(DialogRef);
+  public dialogRef: DialogRef<string> = inject(DialogRef);
   private guestService: GuestService = inject(GuestService);
-  private hotelService: HotelService = inject(HotelService);
-  private roomService: RoomService = inject(RoomService);
+  private messageService: MessageService = inject(MessageService);
   private emergencyContactService: EmergencyContactService = inject(EmergencyContactService);
 
   reservation: any;
@@ -28,12 +28,11 @@ export class ReservationDetailsComponent implements OnInit {
     @Inject(DIALOG_DATA) data: any,
   ) {
     this.reservation = data.reservation;
-    this.getGuests();
-    this.getEmergencyContact();
   }
 
   ngOnInit(): void {
-
+    this.getGuests();
+    this.getEmergencyContact();
   }
 
   closeDialog(): void {
@@ -41,6 +40,7 @@ export class ReservationDetailsComponent implements OnInit {
   }
 
   getGuests() {
+    this.messageService.showLoading('Cargando huéspedes...');
     this.guestService.getGuestsByReservationId(this.reservation.id).subscribe((guestsSnapshot: any) => {
       this.guests = [];
       guestsSnapshot.forEach((guestData: any) => {
@@ -49,22 +49,21 @@ export class ReservationDetailsComponent implements OnInit {
           ...guestData.payload.doc.data()
         });
       });
+      this.messageService.close();
     });
   }
 
   getEmergencyContact() {
+    this.messageService.showLoading('Cargando contacto de emergencia...');
     this.emergencyContactService.getEmergencyContactByReservation(this.reservation.id).subscribe((emergencyContactSnapshot: any) => {
-
       emergencyContactSnapshot.forEach((emergencyContactData: any) => {
         this.emergencyContact = {
           id: emergencyContactData.payload.doc.id,
           ...emergencyContactData.payload.doc.data()
         };
       });
-      console.log('this.emergencyContact: ', this.emergencyContact);
+      this.messageService.close();
     });
   }
-
-
 
 }
