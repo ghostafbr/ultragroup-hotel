@@ -41,17 +41,16 @@ export class AuthService {
     });
   }
 
-  register(newUser: User) {
+  async register(newUser: User) {
     const {email, password} = newUser;
-    return this.afAuth.createUserWithEmailAndPassword(email, password).then(({user}) => {
-      const userTemp = {
-        uid: user?.uid,
-        ...newUser
-      }
-      // @ts-ignore
-      delete userTemp.password;
-      return this.fireStore.collection('users').doc(user?.uid).set(userTemp);
-    });
+    const {user} = await this.afAuth.createUserWithEmailAndPassword(email, password);
+    const userTemp = {
+      uid: user?.uid,
+      ...newUser
+    };
+    // @ts-ignore
+    delete userTemp.password;
+    return await this.fireStore.collection('users').doc(user?.uid).set(userTemp);
   }
 
   login(email: string, password: string) {
@@ -65,4 +64,5 @@ export class AuthService {
   get isAuthenticated(): boolean {
     return this.afAuth.currentUser !== null;
   }
+
 }
