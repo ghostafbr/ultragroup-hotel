@@ -5,10 +5,7 @@ import {HotelService} from "../../../../../core/services/hotel.service";
 import {RoomService} from "../../../../../core/services/room.service";
 import {Hotel} from "../../../../../core/models/hotel.model";
 import {Room} from "../../../../../core/models/room.model";
-
-interface InputData {
-  hotel: Hotel;
-}
+import {InputData} from "../../../../../core/models/input-data.model";
 
 @Component({
   selector: 'app-hotel-details',
@@ -42,7 +39,7 @@ export class HotelDetailsComponent implements OnInit {
       city: [this.hotel ? this.hotel.city : '', Validators.required],
       description: [this.hotel ? this.hotel.description : '', Validators.required],
       /*price: [this.hotel ? this.hotel.price : 0, Validators.required],*/
-      isDisabled: this.hotel ? this.hotel.isDisabled : true,
+      available: this.hotel ? this.hotel.available : true,
       rooms: this.fb.array([]),
     });
   }
@@ -71,7 +68,7 @@ export class HotelDetailsComponent implements OnInit {
         type: [room.type, Validators.required],
         baseCost: [room.baseCost, Validators.required],
         taxes: [room.taxes, Validators.required],
-        isDisabled: room.isDisabled,
+        available: room.available,
         capacity: [room.capacity, [Validators.required, Validators.min(1)]],
         location: [room.location, Validators.required],
         id: [room.id]
@@ -91,7 +88,7 @@ export class HotelDetailsComponent implements OnInit {
         type: ['', Validators.required],
         baseCost: [0, Validators.required],
         taxes: [0, Validators.required],
-        isDisabled: false,
+        available: false,
         capacity: [2, [Validators.required, Validators.min(1)]],
         location: ['', Validators.required],
       })
@@ -109,7 +106,7 @@ export class HotelDetailsComponent implements OnInit {
       return;
     }
 
-    if (this.hotel.id) {
+    if (this.hotel?.id) {
       this.hotelService.updateHotel(this.hotel.id, this.hotelForm.value).then((result) => {
         this.dialogRef.close();
       });

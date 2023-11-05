@@ -6,6 +6,7 @@ interface Reservation {
   checkOutDate: string;
   guests: Guest[];
   emergencyContact: EmergencyContact;
+  userId: string; // Identificador único del usuario que realizó la reserva
   // totalCost: number; // Costo total de la reserva
 }
 

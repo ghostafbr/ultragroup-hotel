@@ -27,6 +27,7 @@ export class AuthService {
         this.userSubscription = this.fireStore.collection('users').doc(fbUser.uid).valueChanges()
           .subscribe( (firestoreUser: any) => {
             this._user = firestoreUser as User;
+            console.log(this._user);
             // this.store.dispatch( actions.setUser({ user }));
           });
 
@@ -58,13 +59,7 @@ export class AuthService {
   }
 
   logout() {
-    this.afAuth.signOut()
-      .then(() => {
-        // Logout successful
-      })
-      .catch((error) => {
-        // An error occurred
-      });
+    return this.afAuth.signOut();
   }
 
   get isAuthenticated(): boolean {

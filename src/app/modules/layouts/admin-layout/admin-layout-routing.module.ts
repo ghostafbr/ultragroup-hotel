@@ -18,11 +18,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('../../admin/hotel/hotel.module').then((m) => m.HotelModule),
       },
-      /*{
-        path: 'rooms',
-        loadChildren: () =>
-          import('../room/room.module').then((m) => m.RoomModule),
-      },*/
     ],
   },
 ];

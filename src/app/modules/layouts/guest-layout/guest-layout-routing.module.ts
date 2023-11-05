@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {AdminLayoutComponent} from "../admin-layout/admin-layout.component";
 
 
 const routes: Routes = [
-  /*{
+  {
     path: '',
-    component: LayoutComponent,
+    component: AdminLayoutComponent,
     children: [
       {
         path: '',
@@ -15,15 +16,10 @@ const routes: Routes = [
       {
         path: 'hotels',
         loadChildren: () =>
-          import('../hotel/hotel.module').then((m) => m.HotelModule),
-      },
-      {
-        path: 'rooms',
-        loadChildren: () =>
-          import('../room/room.module').then((m) => m.RoomModule),
+          import('../../guest/hotel/hotel.module').then((m) => m.HotelModule),
       },
     ],
-  },*/
+  },
 ];
 
 @NgModule({
