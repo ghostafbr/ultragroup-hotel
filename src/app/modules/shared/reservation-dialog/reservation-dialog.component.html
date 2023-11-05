@@ -29,17 +29,13 @@
           </div>
         </div>
 
-        <!-- Habitación -->
         <div class="mb-4 grid grid-cols-2 gap-4">
-          <!-- ... -->
-          <!-- Aquí debes agregar un campo de selección para las habitaciones disponibles -->
           <div>
             <label class="block text-gray-700">Habitación Disponible</label>
             <select class="border rounded px-3 py-2 w-full" formControlName="roomId">
               <option *ngFor="let room of availableRooms" [value]="room.id">{{ room.type }}</option>
             </select>
           </div>
-          <!-- ... -->
         </div>
 
         <!-- Datos del huésped -->

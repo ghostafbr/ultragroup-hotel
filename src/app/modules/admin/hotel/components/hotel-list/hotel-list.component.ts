@@ -71,7 +71,6 @@ export class HotelListComponent implements OnInit {
 
     // Realiza la búsqueda en la lista original de hoteles
     const filteredHotels = this.originalHotels.filter(hotel => {
-      // Ajusta los criterios de búsqueda según tus necesidades
       return (
         (!this.searchCriteria.city || hotel.city.toLowerCase() === this.searchCriteria.city.toLowerCase())
       );

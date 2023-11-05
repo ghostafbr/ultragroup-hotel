@@ -59,9 +59,4 @@ export class HotelService {
     });
   }
 
-  // Eliminar un hotel
-  deleteHotel(id: string) {
-    return this.fireStore.collection('hotels').doc(id).delete();
-  }
-
 }
