@@ -10,14 +10,20 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div *ngFor="let reservation of reservations"
-         class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
-      <p class="text-blue-500 font-semibold mb-2">Fechas de Reserva</p>
-      <p class="text-gray-600">{{ reservation.checkInDate }} - {{ reservation.checkOutDate }}</p>
-      <p class="text-gray-700 my-2">Habitación: {{ reservation.roomId }}</p>
-      <div class="mt-4 flex justify-end">
-        <button (click)="openReservationDetailsDialog(reservation)" class="text-blue-500 hover:underline">Ver detalles</button>
+    <ng-container *ngIf="reservations.length > 0; else noReservations">
+      <div *ngFor="let reservation of reservations"
+           class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
+        <p class="text-blue-500 font-semibold mb-2">Fechas de Reserva</p>
+        <p class="text-gray-600">{{ reservation.checkInDate }} - {{ reservation.checkOutDate }}</p>
+        <p class="text-gray-700 my-2">Habitación: {{ reservation.roomId }}</p>
+        <div class="mt-4 flex justify-end">
+          <button (click)="openReservationDetailsDialog(reservation)" class="text-blue-500 hover:underline">Ver detalles</button>
+        </div>
       </div>
-    </div>
+    </ng-container>
   </div>
+
+  <ng-template #noReservations>
+    <p>No hay reservas disponibles.</p>
+  </ng-template>
 </div>
