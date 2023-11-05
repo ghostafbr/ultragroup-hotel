@@ -2,17 +2,18 @@ import {Component, inject, OnInit} from '@angular/core';
 import {Dialog} from "@angular/cdk/dialog";
 import {HotelService} from "../../../../../core/services/hotel.service";
 import {Hotel} from "../../../../../core/models/hotel.model";
-import {HotelDetailsComponent} from "../../../../admin/hotel/components/hotel-details/hotel-details.component";
 import {ReservationDialogComponent} from "../../../../shared/reservation-dialog/reservation-dialog.component";
+import {MessageService} from "../../../../../core/services/message.service";
 
 @Component({
   selector: 'app-hotel-list',
   templateUrl: './hotel-list.component.html'
 })
-export class HotelListComponent implements OnInit{
+export class HotelListComponent implements OnInit {
 
   private dialog: Dialog = inject(Dialog);
   private hotelService: HotelService = inject(HotelService);
+  private messageService: MessageService = inject(MessageService);
 
   hotels: Hotel[] = [];
   searchCriteria: any = {
@@ -27,6 +28,7 @@ export class HotelListComponent implements OnInit{
   }
 
   getHotels() {
+    this.messageService.showLoading('Cargando hoteles...');
     this.hotelService.getHotels().subscribe((hotels: any) => {
       this.hotels = hotels.map((hotel: any) => {
         return {
@@ -34,7 +36,7 @@ export class HotelListComponent implements OnInit{
           ...hotel.payload.doc.data()
         }
       });
-
+      this.messageService.close();
       this.hotels = this.hotels.filter((hotel: Hotel) => hotel.available);
     });
   }
@@ -51,14 +53,13 @@ export class HotelListComponent implements OnInit{
 
     dialogRef.closed.subscribe((result: any) => {
       if (result) {
-        console.log('The dialog was closed');
-        console.log(result);
+        this.messageService.showSuccess(result);
       }
     });
 
   }
 
-  searchHotels()  {
+  searchHotels() {
     console.log('Criterios de búsqueda:', this.searchCriteria);
   }
 
