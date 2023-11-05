@@ -21,6 +21,8 @@ export class RoomService {
     return this.fireStore.collection('hotels').doc(hotelId).collection('rooms').doc(roomId).snapshotChanges();
   }
 
+
+
   // Crear una habitación
   createRoom(hotelId: string, room: any) {
     return this.fireStore.collection('hotels').doc(hotelId).collection('rooms').add(room);

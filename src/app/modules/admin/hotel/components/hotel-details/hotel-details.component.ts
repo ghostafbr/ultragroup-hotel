@@ -22,6 +22,7 @@ export class HotelDetailsComponent implements OnInit {
   rooms: Room[] = [];
   hotelForm!: FormGroup;
 
+
   constructor(
     @Inject(DIALOG_DATA) data: InputData,
   ) {
@@ -38,7 +39,6 @@ export class HotelDetailsComponent implements OnInit {
       name: [this.hotel ? this.hotel.name : '', Validators.required],
       city: [this.hotel ? this.hotel.city : '', Validators.required],
       description: [this.hotel ? this.hotel.description : '', Validators.required],
-      /*price: [this.hotel ? this.hotel.price : 0, Validators.required],*/
       available: this.hotel ? this.hotel.available : true,
       rooms: this.fb.array([]),
     });

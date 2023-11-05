@@ -1,4 +1,4 @@
-interface EmergencyContact {
+export interface EmergencyContact {
   id: string;
   name: string;
   contactPhone: string;

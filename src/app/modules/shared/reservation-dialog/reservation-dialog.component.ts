@@ -20,7 +20,6 @@ export class ReservationDialogComponent implements OnInit {
 
   private fb: FormBuilder = inject(FormBuilder);
   public dialogRef: DialogRef<HotelDetailsComponent> = inject(DialogRef);
-  private hotelService: HotelService = inject(HotelService);
   private roomService: RoomService = inject(RoomService);
 
   private reservationService: ReservationService = inject(ReservationService);
@@ -50,7 +49,7 @@ export class ReservationDialogComponent implements OnInit {
         contactPhone: ['', Validators.required],
       }),
       roomId: ['', Validators.required],
-      hotelId: [this.hotel.id, Validators.required],
+      hotelId: [this.hotel ? this.hotel.id : null, Validators.required],
       userId: [localStorage.getItem('userId'), Validators.required],
     });
   }
@@ -60,7 +59,6 @@ export class ReservationDialogComponent implements OnInit {
   }
 
   getRooms() {
-    console.log('this.hotel.id: ', this.hotel.id);
     this.roomService.getRoomsByHotel(this.hotel.id).subscribe((result) => {
       const rooms = result.map((room: any) => {
         return {
@@ -95,11 +93,7 @@ export class ReservationDialogComponent implements OnInit {
   }
 
   submitReservation() {
-    console.log('this.reservationForm.value: ', this.reservationForm.value);
-
     this.reservationService.saveReservation(this.reservationForm.value);
-
-
     this.dialogRef.close(this.reservationForm.value);
   }
 

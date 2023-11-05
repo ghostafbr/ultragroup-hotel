@@ -2,7 +2,6 @@ import {Component, inject, OnInit} from '@angular/core';
 import {HotelDetailsComponent} from "../hotel-details/hotel-details.component";
 import { Dialog } from '@angular/cdk/dialog';
 import {HotelService} from "../../../../../core/services/hotel.service";
-import {AuthService} from "../../../../../core/services/auth.service";
 import {Hotel} from "../../../../../core/models/hotel.model";
 
 @Component({

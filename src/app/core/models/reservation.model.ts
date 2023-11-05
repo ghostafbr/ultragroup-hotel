@@ -1,4 +1,7 @@
-interface Reservation {
+import {Guest} from "./guest.model";
+import {EmergencyContact} from "./emergency-contact.model";
+
+export interface Reservation {
   id: string;
   hotelId: string; // Identificador único del hotel reservado
   roomId: string; // Identificador único de la habitación reservada

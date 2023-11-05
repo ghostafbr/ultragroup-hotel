@@ -1,0 +1,42 @@
+<div class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="modal-container bg-white w-96 mx-auto rounded shadow-lg p-6">
+    <h1 class="text-2xl font-semibold text-blue-600 mb-4">Detalles de Reserva</h1>
+    <!-- Información de la reserva -->
+    <div class="text-gray-700 mb-4">
+      <strong>ID de Reserva:</strong> {{ reservation.id }}
+    </div>
+    <div class="text-gray-700 mb-4">
+      <strong>ID del Hotel:</strong> {{ reservation.hotelId }}
+    </div>
+    <div class="text-gray-700 mb-4">
+      <strong>ID de la Habitación:</strong> {{ reservation.roomId }}
+    </div>
+    <div class="text-gray-700 mb-4">
+      <strong>Fecha de Ingreso:</strong> {{ reservation.checkInDate }}
+    </div>
+    <div class="text-gray-700 mb-4">
+      <strong>Fecha de Salida:</strong> {{ reservation.checkOutDate }}
+    </div>
+
+    <h2 class="text-lg font-semibold mt-6 text-blue-600">Huéspedes</h2>
+    <ul>
+      <li *ngFor="let guest of guests" class="text-gray-700 mb-2">
+        <strong>Nombre:</strong> {{ guest.name }}
+        <!-- Agregar más detalles de los huéspedes si es necesario -->
+      </li>
+    </ul>
+
+    <h2 class="text-lg font-semibold mt-6 text-blue-600">Contacto de Emergencia</h2>
+    <div class="text-gray-700">
+      <strong>Nombre:</strong> {{ emergencyContact?.name }}
+      <!-- Agregar más detalles del contacto de emergencia si es necesario -->
+    </div>
+
+    <!-- Botón para cerrar el diálogo -->
+    <button (click)="closeDialog()"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-6"
+            type="button">
+      Cerrar
+    </button>
+  </div>
+</div>

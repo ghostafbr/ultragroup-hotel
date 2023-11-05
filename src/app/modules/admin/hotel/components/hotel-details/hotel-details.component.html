@@ -61,10 +61,10 @@
                     class="border rounded px-3 py-2 w-full"
                     formControlName="type"
                   >
-                    <option value="habitacion_individual">Habitación Individual</option>
-                    <option value="habitacion_doble">Habitación Doble</option>
-                    <option value="habitacion_multiple">Habitación Múltiple</option>
-                    <option value="suite_lujo">Suite de Lujo</option>
+                    <option value="Habitación Individual">Habitación Individual</option>
+                    <option value="Habitación Doble">Habitación Doble</option>
+                    <option value="Habitación Múltiple">Habitación Múltiple</option>
+                    <option value="Suite de Lujo">Suite de Lujo</option>
                   </select>
                   <div *ngIf="roomsArray.controls[i].get('type')?.hasError('required')" class="text-red-600">Tipo requerido</div>
                 </div>

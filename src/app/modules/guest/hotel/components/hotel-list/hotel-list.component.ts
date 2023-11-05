@@ -41,8 +41,6 @@ export class HotelListComponent implements OnInit{
 
   openReservationModal(hotel: any | null = null) {
 
-    console.log('hotel: ', hotel);
-
     const dialogRef = this.dialog.open(ReservationDialogComponent, {
       minWidth: '600px',
       maxWidth: '80%',

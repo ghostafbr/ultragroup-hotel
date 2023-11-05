@@ -2,6 +2,8 @@ import {inject, Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {AuthService} from "./auth.service";
 import {RoomService} from "./room.service";
+import {GuestService} from "./guest.service";
+import {EmergencyContactService} from "./emergency-contact.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,8 @@ export class ReservationService {
   private fireStore: AngularFirestore = inject(AngularFirestore);
   private authService: AuthService = inject(AuthService);
   private roomService: RoomService = inject(RoomService);
+  private guestService: GuestService = inject(GuestService);
+  private emergencyContactService: EmergencyContactService = inject(EmergencyContactService);
 
   async saveReservation(reservation: any) {
 
@@ -18,19 +22,29 @@ export class ReservationService {
 
     delete reservation.emergencyContact;
     delete reservation.guests;
+
     const result = await this.fireStore.collection('reservations').add(reservation);
-    console.log('result: ', result);
+
     emergencyContact.reservationId = result.id;
-    await this.fireStore.collection('emergencyContacts').add(emergencyContact);
+    this.emergencyContactService.saveEmergencyContact(emergencyContact);
+
     guests.forEach((guest: any) => {
       guest.reservationId = result.id;
-      return this.fireStore.collection('guests').add(guest);
+      this.guestService.createGuest(guest);
     });
 
     await this.roomService.updateRoom(hotelId, roomId, {available: false});
 
     this.sendEmail(result.id);
 
+  }
+
+  getAllReservations() {
+    return this.fireStore.collection('reservations').snapshotChanges();
+  }
+
+  getReservationById(id: string) {
+    return this.fireStore.collection('reservations').doc(id).snapshotChanges();
   }
 
   getReservationsByUser(id: string) {
