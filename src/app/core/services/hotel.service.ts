@@ -47,8 +47,9 @@ export class HotelService {
 
   // Actualizar un hotel
   async updateHotel(id: string, hotel: any) {
-    await this.fireStore.collection('hotels').doc(id).update(hotel);
     const rooms = hotel.rooms;
+    delete hotel.rooms;
+    await this.fireStore.collection('hotels').doc(id).update(hotel);
     rooms.forEach((room: any) => {
       if (room.id) {
         return this.roomService.updateRoom(id, room.id, room);

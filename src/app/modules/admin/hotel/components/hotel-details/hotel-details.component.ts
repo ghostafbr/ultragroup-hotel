@@ -6,6 +6,7 @@ import {RoomService} from "../../../../../core/services/room.service";
 import {Hotel} from "../../../../../core/models/hotel.model";
 import {Room} from "../../../../../core/models/room.model";
 import {InputData} from "../../../../../core/models/input-data.model";
+import {MessageService} from "../../../../../core/services/message.service";
 
 @Component({
   selector: 'app-hotel-details',
@@ -14,14 +15,14 @@ import {InputData} from "../../../../../core/models/input-data.model";
 export class HotelDetailsComponent implements OnInit {
 
   private fb: FormBuilder = inject(FormBuilder);
-  public dialogRef: DialogRef<HotelDetailsComponent> = inject(DialogRef);
+  public dialogRef: DialogRef<string> = inject(DialogRef);
   private hotelService: HotelService = inject(HotelService);
   private roomService: RoomService = inject(RoomService);
+  private messageService: MessageService = inject(MessageService);
 
   hotel: Hotel;
   rooms: Room[] = [];
   hotelForm!: FormGroup;
-
 
   constructor(
     @Inject(DIALOG_DATA) data: InputData,
@@ -46,6 +47,7 @@ export class HotelDetailsComponent implements OnInit {
 
   loadRooms() {
     if (this.hotel) {
+      this.messageService.showLoading();
       this.roomService.getRoomsByHotel(this.hotel.id).subscribe((result) => {
         this.rooms = result.map((room: any) => {
           return {
@@ -53,6 +55,7 @@ export class HotelDetailsComponent implements OnInit {
             ...room.payload.doc.data()
           }
         });
+        this.messageService.close();
         this.rooms.forEach((room: Room) => {
           this.addRoomToForm(room);
         });
@@ -105,21 +108,23 @@ export class HotelDetailsComponent implements OnInit {
     if (this.hotelForm.invalid) {
       return;
     }
-
+    this.messageService.showLoading('Guardando hotel...');
     if (this.hotel?.id) {
       this.hotelService.updateHotel(this.hotel.id, this.hotelForm.value).then((result) => {
-        this.dialogRef.close();
+        this.messageService.close();
+        this.closeDialog('Hotel actualizado correctamente');
       });
     } else {
       this.hotelService.createHotel(this.hotelForm.value).then((result) => {
-        this.dialogRef.close();
+        this.messageService.close();
+        this.closeDialog('Hotel creado correctamente');
       });
     }
 
   }
 
-  closeDialog(): void {
-    this.dialogRef.close();
+  closeDialog(message?: string) {
+    this.dialogRef.close(message);
   }
 
 }

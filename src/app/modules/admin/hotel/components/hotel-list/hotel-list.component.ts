@@ -55,8 +55,7 @@ export class HotelListComponent implements OnInit {
 
     dialogRef.closed.subscribe((result: any) => {
       if (result) {
-        console.log('The dialog was closed');
-        console.log(result);
+        this.messageService.showSuccess(result);
       }
     });
 
