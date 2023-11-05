@@ -28,7 +28,7 @@ jobs:
       - name: Build Angular App
         run: |
           npm install
-          ng build --prod
+          ng build
           mkdir -p ./dist/ultragroup-hotel
           cp -r ./dist/* ./dist/ultragroup-hotel
 
