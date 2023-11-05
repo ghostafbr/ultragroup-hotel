@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {User} from "../models/user.model";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {BehaviorSubject, Subscription} from "rxjs";
+import {BehaviorSubject, map, Observable, of, Subscription} from "rxjs";
 import {Router} from "@angular/router";
 import {MessageService} from "./message.service";
 
@@ -60,13 +60,24 @@ export class AuthService {
   logout() {
     this._user = null;
     this.user$.next(null);
-    localStorage.clear();
+    localStorage.removeItem('role');
+    localStorage.removeItem('userId');
     this.userSubscription?.unsubscribe();
     return this.afAuth.signOut();
   }
 
   get isAuthenticated(): boolean {
     return this.afAuth.currentUser !== null;
+  }
+
+  isAdmin$(): Observable<boolean> {
+    return of (localStorage.getItem('role') === 'admin');
+  }
+
+  isAuth$(): Observable<boolean> {
+    return this.afAuth.authState.pipe(
+      map(fbUser => fbUser !== null)
+    )
   }
 
 }

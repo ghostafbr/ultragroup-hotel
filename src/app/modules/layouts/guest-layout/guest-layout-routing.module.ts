@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {AdminLayoutComponent} from "../admin-layout/admin-layout.component";
+import {authGuard} from "../../../core/guards/auth.guard";
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
         path: 'hotels',
         loadChildren: () =>
           import('../../guest/hotel/hotel.module').then((m) => m.HotelModule),
+        canActivate: [authGuard]
       },
     ],
   },
