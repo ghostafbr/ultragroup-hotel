@@ -1,7 +1,7 @@
 export interface User {
   firstName: string | null | undefined;
   lastName: string;
-  dateOfBirth: string;
+  birthdate: string;
   gender: string;
   documentType: string;
   documentNumber: string;

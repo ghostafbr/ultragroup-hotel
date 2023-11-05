@@ -3,7 +3,7 @@ export interface Room {
   type: string; // Tipo de habitación
   baseCost: number; // Costo base de la habitación
   taxes: number; // Impuestos aplicados a la habitación
-  isDisabled: boolean; // Indica si la habitación está deshabilitada
+  available: boolean; // Indica si la habitación está deshabilitada
   location: string; // Ubicación de la habitación en el hotel
   capacity: number; // Capacidad de la habitación
 }
