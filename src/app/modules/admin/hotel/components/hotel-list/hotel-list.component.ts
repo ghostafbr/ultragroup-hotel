@@ -46,6 +46,7 @@ export class HotelListComponent implements OnInit {
         });
     }
 
+
     openCreateHotelModal(hotel: any | null = null) {
         const dialogRef = this.dialog.open(HotelDetailsComponent, {
             minWidth: '600px',
@@ -77,9 +78,15 @@ export class HotelListComponent implements OnInit {
                     });
                 });
                 this.hotels = !this.searchCriteria.name ? this.hotels : this.hotels.filter((hotel: Hotel) => hotel.name.toLowerCase().includes(this.searchCriteria.name.toLowerCase()));
+                this.removeRepeatedHotels();
             }
         )
+    }
 
+    removeRepeatedHotels() {
+        this.hotels = this.hotels.filter((valor, indice, self) => {
+            return self.findIndex((elemento) => elemento.id === valor.id) === indice;
+        });
     }
 
 }
