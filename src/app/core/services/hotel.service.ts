@@ -35,7 +35,7 @@ export class HotelService {
     const newHotel = {
       ...hotel,
       imageUrl: 'https://via.placeholder.com/300x200',
-      userId: this.authService.user?.uid
+      userId: localStorage.getItem('userId')
     }
     const rooms = hotel.rooms;
     delete newHotel.rooms;
