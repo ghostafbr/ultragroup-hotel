@@ -4,8 +4,6 @@ import {HotelService} from "../../../../../core/services/hotel.service";
 import {Hotel} from "../../../../../core/models/hotel.model";
 import {ReservationDialogComponent} from "../../../../shared/reservation-dialog/reservation-dialog.component";
 import {MessageService} from "../../../../../core/services/message.service";
-import {tap} from "rxjs";
-import {RoomService} from "../../../../../core/services/room.service";
 
 @Component({
   selector: 'app-hotel-list',
@@ -16,7 +14,6 @@ export class HotelListComponent implements OnInit {
   private dialog: Dialog = inject(Dialog);
   private hotelService: HotelService = inject(HotelService);
   private messageService: MessageService = inject(MessageService);
-  private roomService: RoomService = inject(RoomService);
 
   hotels: Hotel[] = [];
   tempHotels: Hotel[] = [];
@@ -28,7 +25,8 @@ export class HotelListComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.getHotels();
+    // this.getHotels();
+    this.searchHotelsByCityAndRoomCapacity();
   }
 
   getHotels() {
@@ -62,42 +60,30 @@ export class HotelListComponent implements OnInit {
 
   }
 
-  searchHotels() {
-    this.hotels = [...this.tempHotels];
-
-    if (this.searchCriteria.capacity >= 1) {
-      this.hotels.forEach((hotel: Hotel) => {
-        this.getRoomsByHotel(hotel);
+  searchHotelsByCityAndRoomCapacity() {
+    this.hotels = [];
+    this.hotelService.searchHotelsByCityAndRoomCapacity(this.searchCriteria.city, this.searchCriteria.capacity).subscribe((hotels) => {
+      hotels.forEach((hotel: any) => {
+        if (hotel && hotel.id) {
+          // Verifica que el elemento no sea null y tenga una propiedad 'id'
+          this.hotels.push(hotel);
+        }
       });
-      this.hotels = this.hotels.filter((hotel: Hotel) => {
-        return hotel.rooms.some((room: any) => {
-          return room && room.available;
-        });
-      });
-    }
-
-    if (this.searchCriteria.city) {
-      this.hotels = this.hotels.filter((hotel: Hotel) => {
-        return hotel.city.toLowerCase().includes(this.searchCriteria.city.toLowerCase());
-      });
-    }
-
+      this.removeRepeatedHotels();
+      this.getAvailables();
+      console.log('Hoteles disponibles: ', this.hotels);
+    });
   }
 
-  getRoomsByHotel(hotel: Hotel) {
-    this.roomService.getRoomsByHotel(hotel.id).pipe(
-      tap((rooms: any) => {
-        hotel.rooms = rooms.map((room: any) => {
-          if (room.payload.doc.data().available && room.payload.doc.data().capacity >= this.searchCriteria.capacity) {
-            return {
-              id: room.payload.doc.id,
-              ...room.payload.doc.data()
-            }
-          }
-        });
-      })
-    ).subscribe();
-
+  removeRepeatedHotels() {
+    this.hotels = this.hotels.filter((valor, indice, self) => {
+      return self.findIndex((elemento) => elemento.id === valor.id) === indice;
+    });
   }
+
+  getAvailables() {
+    this.hotels.filter((hotel: Hotel) => hotel.available);
+  }
+
 
 }

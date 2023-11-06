@@ -2,7 +2,7 @@
   <h1 class="text-3xl font-bold mb-4">Lista de Hoteles</h1>
   <form #f="ngForm" (ngSubmit)="searchHotels()" class="mb-8">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <input [(ngModel)]="searchCriteria.city" [ngModelOptions]="{standalone: true}" type="text" placeholder="Ciudad">
+      <input [(ngModel)]="searchCriteria.name" [ngModelOptions]="{standalone: true}" type="text" placeholder="Nombre del hotel">
       <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-700">
         Buscar Hoteles
       </button>
