@@ -6,84 +6,82 @@ import {ReservationDialogComponent} from "../../../../shared/reservation-dialog/
 import {MessageService} from "../../../../../core/services/message.service";
 
 @Component({
-  selector: 'app-hotel-list',
-  templateUrl: './hotel-list.component.html'
+    selector: 'app-hotel-list',
+    templateUrl: './hotel-list.component.html'
 })
 export class HotelListComponent implements OnInit {
 
-  private dialog: Dialog = inject(Dialog);
-  private hotelService: HotelService = inject(HotelService);
-  private messageService: MessageService = inject(MessageService);
+    private dialog: Dialog = inject(Dialog);
+    private hotelService: HotelService = inject(HotelService);
+    private messageService: MessageService = inject(MessageService);
 
-  hotels: Hotel[] = [];
-  tempHotels: Hotel[] = [];
-  searchCriteria: any = {
-    checkInDate: '',
-    checkOutDate: '',
-    capacity: 0,
-    city: '',
-  };
+    hotels: Hotel[] = [];
+    tempHotels: Hotel[] = [];
+    searchCriteria: any = {
+        checkInDate: '',
+        checkOutDate: '',
+        capacity: 0,
+        city: '',
+    };
 
-  ngOnInit() {
-    // this.getHotels();
-    this.searchHotelsByCityAndRoomCapacity();
-  }
+    ngOnInit() {
+        // this.getHotels();
+        this.searchHotelsByCityAndRoomCapacity();
+    }
 
-  getHotels() {
-    this.messageService.showLoading('Cargando hoteles...');
-    this.hotelService.getHotels().subscribe((hotels: any) => {
-      this.hotels = hotels.map((hotel: any) => {
-        return {
-          id: hotel.payload.doc.id,
-          ...hotel.payload.doc.data()
-        }
-      });
-      this.tempHotels = [...this.hotels];
-      this.messageService.close();
-      this.hotels = this.hotels.filter((hotel: Hotel) => hotel.available);
-    });
-  }
+    getHotels() {
+        this.messageService.showLoading('Cargando hoteles...');
+        this.hotelService.getHotels().subscribe((hotels: any) => {
+            this.hotels = hotels.map((hotel: any) => {
+                return {
+                    id: hotel.payload.doc.id,
+                    ...hotel.payload.doc.data()
+                }
+            });
+            this.tempHotels = [...this.hotels];
+            this.messageService.close();
+            this.hotels = this.hotels.filter((hotel: Hotel) => hotel.available);
+        });
+    }
 
-  openReservationModal(hotel: any | null = null) {
-    const dialogRef = this.dialog.open(ReservationDialogComponent, {
-      minWidth: '600px',
-      maxWidth: '80%',
-      data: {
-        hotel,
-      },
-    });
-    dialogRef.closed.subscribe((result: any) => {
-      if (result) {
-        this.messageService.showSuccess(result);
-      }
-    });
+    openReservationModal(hotel: any | null = null) {
+        const dialogRef = this.dialog.open(ReservationDialogComponent, {
+            minWidth: '600px',
+            maxWidth: '80%',
+            data: {
+                hotel,
+            },
+        });
+        dialogRef.closed.subscribe((result: any) => {
+            if (result) {
+                this.messageService.showSuccess(result);
+            }
+        });
 
-  }
+    }
 
-  searchHotelsByCityAndRoomCapacity() {
-    this.hotels = [];
-    this.hotelService.searchHotelsByCityAndRoomCapacity(this.searchCriteria.city, this.searchCriteria.capacity).subscribe((hotels) => {
-      hotels.forEach((hotel: any) => {
-        if (hotel && hotel.id) {
-          // Verifica que el elemento no sea null y tenga una propiedad 'id'
-          this.hotels.push(hotel);
-        }
-      });
-      this.removeRepeatedHotels();
-      this.getAvailables();
-      console.log('Hoteles disponibles: ', this.hotels);
-    });
-  }
+    searchHotelsByCityAndRoomCapacity() {
+        this.hotels = [];
+        this.hotelService.searchHotelsByCityAndRoomCapacity(this.searchCriteria.city, this.searchCriteria.capacity).subscribe((hotels) => {
+            hotels.forEach((hotel: any) => {
+                if (hotel && hotel.id) {
+                    this.hotels.push(hotel);
+                }
+            });
+            this.removeRepeatedHotels();
+            this.getAvailables();
+        });
+    }
 
-  removeRepeatedHotels() {
-    this.hotels = this.hotels.filter((valor, indice, self) => {
-      return self.findIndex((elemento) => elemento.id === valor.id) === indice;
-    });
-  }
+    removeRepeatedHotels() {
+        this.hotels = this.hotels.filter((valor, indice, self) => {
+            return self.findIndex((elemento) => elemento.id === valor.id) === indice;
+        });
+    }
 
-  getAvailables() {
-    this.hotels.filter((hotel: Hotel) => hotel.available);
-  }
+    getAvailables() {
+        this.hotels.filter((hotel: Hotel) => hotel.available);
+    }
 
 
 }

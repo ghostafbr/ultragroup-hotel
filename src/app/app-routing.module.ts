@@ -1,12 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {authGuard} from "./core/guards/auth.guard";
-import {redirectGuard} from "./core/guards/redirect.guard";
+
 
 const routes: Routes = [
   {
     path: '',
-    canActivate: [redirectGuard],
     loadChildren: () => import('./modules/auth/auth.module').then((m) => m.AuthModule),
   },
   {
@@ -16,6 +15,7 @@ const routes: Routes = [
   },
   {
     path: 'guest',
+    canActivate: [authGuard],
     loadChildren: () => import('./modules/layouts/guest-layout/guest-layout.module').then((m) => m.GuestLayoutModule),
   }
 ];

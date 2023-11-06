@@ -1,7 +1,5 @@
 import {inject, Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {AuthService} from "./auth.service";
-import {RoomService} from "./room.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +7,6 @@ import {RoomService} from "./room.service";
 export class GuestService {
 
   private fireStore: AngularFirestore = inject(AngularFirestore);
-  private authService: AuthService = inject(AuthService);
-  private roomService: RoomService = inject(RoomService);
 
   constructor() { }
 

@@ -7,77 +7,69 @@ import {Router} from "@angular/router";
 import {MessageService} from "./message.service";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AuthService {
 
-  private afAuth: AngularFireAuth = inject(AngularFireAuth);
-  private fireStore: AngularFirestore = inject(AngularFirestore);
-  private messageService: MessageService = inject(MessageService);
+    private afAuth: AngularFireAuth = inject(AngularFireAuth);
+    private fireStore: AngularFirestore = inject(AngularFirestore);
 
-  userSubscription: Subscription | undefined | null;
-  private _user: User | null = null;
-  private router: Router = inject(Router);
+    userSubscription: Subscription | undefined | null;
+    private _user: User | null = null;
+    private router: Router = inject(Router);
+    user$ = new BehaviorSubject<User | null>(null);
 
-  user$ = new BehaviorSubject<User | null>(null);
+    get user() {
+        return this.user$.getValue();
+    }
 
+    initAuthListener() {
+        this.afAuth.authState.subscribe(fbUser => {
+            if (fbUser) {
+                this.userSubscription = this.fireStore.collection('users').doc(fbUser.uid).valueChanges()
+                    .subscribe((firestoreUser: any) => {
+                        this._user = firestoreUser as User;
+                    });
+            } else {
+                this._user = null;
+                this.userSubscription?.unsubscribe();
+            }
+        });
+    }
 
-  get user() {
-    return this.user$.getValue();
-  }
+    async register(newUser: User) {
+        const {email, password} = newUser;
+        const {user} = await this.afAuth.createUserWithEmailAndPassword(email, password);
+        const userTemp = {
+            uid: user?.uid,
+            ...newUser
+        };
+        // @ts-ignore
+        delete userTemp.password;
+        return await this.fireStore.collection('users').doc(user?.uid).set(userTemp);
+    }
 
-  initAuthListener() {
-    this.afAuth.authState.subscribe(fbUser => {
-      if (fbUser) {
-        this.userSubscription = this.fireStore.collection('users').doc(fbUser.uid).valueChanges()
-          .subscribe((firestoreUser: any) => {
-            this._user = firestoreUser as User;
-          });
+    login(email: string, password: string) {
+        return this.afAuth.signInWithEmailAndPassword(email, password);
+    }
 
-      } else {
+    logout() {
         this._user = null;
+        this.user$.next(null);
+        localStorage.removeItem('role');
+        localStorage.removeItem('userId');
         this.userSubscription?.unsubscribe();
-      }
-    });
-  }
+        return this.afAuth.signOut();
+    }
 
-  async register(newUser: User) {
-    const {email, password} = newUser;
-    const {user} = await this.afAuth.createUserWithEmailAndPassword(email, password);
-    const userTemp = {
-      uid: user?.uid,
-      ...newUser
-    };
-    // @ts-ignore
-    delete userTemp.password;
-    return await this.fireStore.collection('users').doc(user?.uid).set(userTemp);
-  }
+    isAdmin$(): Observable<boolean> {
+        return of(localStorage.getItem('role') === 'admin');
+    }
 
-  login(email: string, password: string) {
-    return this.afAuth.signInWithEmailAndPassword(email, password);
-  }
-
-  logout() {
-    this._user = null;
-    this.user$.next(null);
-    localStorage.removeItem('role');
-    localStorage.removeItem('userId');
-    this.userSubscription?.unsubscribe();
-    return this.afAuth.signOut();
-  }
-
-  get isAuthenticated(): boolean {
-    return this.afAuth.currentUser !== null;
-  }
-
-  isAdmin$(): Observable<boolean> {
-    return of (localStorage.getItem('role') === 'admin');
-  }
-
-  isAuth$(): Observable<boolean> {
-    return this.afAuth.authState.pipe(
-      map(fbUser => fbUser !== null)
-    )
-  }
+    isAuth$(): Observable<boolean> {
+        return this.afAuth.authState.pipe(
+            map(fbUser => fbUser !== null)
+        )
+    }
 
 }

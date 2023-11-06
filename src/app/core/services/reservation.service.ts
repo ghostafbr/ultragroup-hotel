@@ -1,73 +1,51 @@
 import {inject, Injectable} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {AuthService} from "./auth.service";
 import {RoomService} from "./room.service";
 import {GuestService} from "./guest.service";
 import {EmergencyContactService} from "./emergency-contact.service";
 import {Guest} from "../models/guest.model";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ReservationService {
 
-  private fireStore: AngularFirestore = inject(AngularFirestore);
-  private authService: AuthService = inject(AuthService);
-  private roomService: RoomService = inject(RoomService);
-  private guestService: GuestService = inject(GuestService);
-  private emergencyContactService: EmergencyContactService = inject(EmergencyContactService);
+    private fireStore: AngularFirestore = inject(AngularFirestore);
+    private roomService: RoomService = inject(RoomService);
+    private guestService: GuestService = inject(GuestService);
+    private emergencyContactService: EmergencyContactService = inject(EmergencyContactService);
 
-  async saveReservation(reservation: any) {
+    async saveReservation(reservation: any) {
 
-    const {emergencyContact, guests, hotelId, roomId} = reservation;
+        const {emergencyContact, guests, hotelId, roomId} = reservation;
 
-    delete reservation.emergencyContact;
-    delete reservation.guests;
+        delete reservation.emergencyContact;
+        delete reservation.guests;
 
-    const result = await this.fireStore.collection('reservations').add(reservation);
+        const result = await this.fireStore.collection('reservations').add(reservation);
 
-    emergencyContact.reservationId = result.id;
-    this.emergencyContactService.saveEmergencyContact(emergencyContact);
+        emergencyContact.reservationId = result.id;
+        this.emergencyContactService.saveEmergencyContact(emergencyContact);
 
-    guests.forEach((guest: any) => {
-      guest.reservationId = result.id;
-      this.guestService.createGuest(guest);
-    });
+        guests.forEach((guest: any) => {
+            guest.reservationId = result.id;
+            this.guestService.createGuest(guest);
+        });
 
-    await this.roomService.updateRoom(hotelId, roomId, {available: false});
+        await this.roomService.updateRoom(hotelId, roomId, {available: false});
 
-    this.sendEmail(result.id, guests);
+        this.sendEmail(result.id, guests);
 
-  }
+    }
 
-  getAllReservations() {
-    return this.fireStore.collection('reservations').snapshotChanges();
-  }
+    getReservationsByHotel(id: string) {
+        return this.fireStore.collection('reservations', ref => ref.where('hotelId', '==', id)).snapshotChanges();
+    }
 
-  getReservationById(id: string) {
-    return this.fireStore.collection('reservations').doc(id).snapshotChanges();
-  }
+    sendEmail(reservationId: string, guests: Guest[]) {
+        const emails = guests.map((guest: Guest) => guest.email);
 
-  getReservationsByUser(id: string) {
-    return this.fireStore.collection('reservations', ref => ref.where('userId', '==', id)).snapshotChanges();
-  }
-
-  getReservationsByHotel(id: string) {
-    return this.fireStore.collection('reservations', ref => ref.where('hotelId', '==', id)).snapshotChanges();
-  }
-
-  getReservationsByRoom(id: string) {
-    return this.fireStore.collection('reservations', ref => ref.where('roomId', '==', id)).snapshotChanges();
-  }
-
-  getReservationsByHotelAndRoom(hotelId: string, roomId: string) {
-    return this.fireStore.collection('reservations', ref => ref.where('hotelId', '==', hotelId).where('roomId', '==', roomId)).snapshotChanges();
-  }
-
-  sendEmail(reservationId: string, guests: Guest[]) {
-    const emails = guests.map((guest: Guest) => guest.email);
-
-    const htmlBody = `
+        const htmlBody = `
     <html>
     <head>
       <style>
@@ -109,15 +87,15 @@ export class ReservationService {
     </html>
   `;
 
-    return this.fireStore.collection('emails').add({
-      from: 'UltraGroup Hotel App',
-      to: emails,
-      message: {
-        subject: 'Reserva generada correctamente',
-        html: htmlBody
-      }
-    });
-  }
+        return this.fireStore.collection('emails').add({
+            from: 'UltraGroup Hotel App',
+            to: emails,
+            message: {
+                subject: 'Reserva generada correctamente',
+                html: htmlBody
+            }
+        });
+    }
 
 
 }

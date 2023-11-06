@@ -1,29 +1,30 @@
 <div class="container mx-auto my-8">
-  <h1 class="text-3xl font-bold mb-4">Lista de Reservas</h1>
-  <div class="mb-4">
-    <label class="text-gray-700" for="selectedHotel">Selecciona un hotel:</label>
-    <select [(ngModel)]="selectedHotelId" [ngModelOptions]="{standalone: true}" class="border rounded px-3 py-2 w-full"
-            id="selectedHotel" (ngModelChange)="onHotelChange()">
-      <option value="">Seleccione un hotel</option>
-      <option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.name }}</option>
-    </select>
-  </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <ng-container *ngIf="reservations.length > 0; else noReservations">
-      <div *ngFor="let reservation of reservations"
-           class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
-        <p class="text-blue-500 font-semibold mb-2">Fechas de Reserva</p>
-        <p class="text-gray-600">{{ reservation.checkInDate }} - {{ reservation.checkOutDate }}</p>
-        <p class="text-gray-700 my-2">Habitación: {{ reservation.roomId }}</p>
-        <div class="mt-4 flex justify-end">
-          <button (click)="openReservationDetailsDialog(reservation)" class="text-blue-500 hover:underline">Ver detalles</button>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-
-  <ng-template #noReservations>
-    <p>No hay reservas disponibles.</p>
-  </ng-template>
+    <h1 class="text-3xl font-bold mb-4">Lista de Reservas</h1>
+    <div class="mb-4">
+        <label class="text-gray-700" for="selectedHotel">Selecciona un hotel:</label>
+        <select (change)="onHotelChange()" [(ngModel)]="selectedHotelId"
+                [ngModelOptions]="{standalone: true}"
+                class="border rounded px-3 py-2 w-full" id="selectedHotel">
+            <option value="">Seleccione un hotel</option>
+            <option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.name }}</option>
+        </select>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <ng-container *ngIf="reservations.length > 0; else noReservations">
+            <div *ngFor="let reservation of reservations"
+                 class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
+                <p class="text-blue-500 font-semibold mb-2">Fechas de Reserva</p>
+                <p class="text-gray-600">{{ reservation.checkInDate }} - {{ reservation.checkOutDate }}</p>
+                <p class="text-gray-700 my-2">Habitación: {{ reservation.roomId }}</p>
+                <div class="mt-4 flex justify-end">
+                    <button (click)="openReservationDetailsDialog(reservation)" class="text-blue-500 hover:underline">
+                        Ver detalles
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <ng-template #noReservations>
+        <p>No hay reservas disponibles.</p>
+    </ng-template>
 </div>

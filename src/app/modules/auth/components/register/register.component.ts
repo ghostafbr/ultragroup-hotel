@@ -2,7 +2,6 @@ import {Component, inject} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../../../core/services/auth.service";
 import {User} from "../../../../core/models/user.model";
-import Swal from "sweetalert2";
 import {MessageService} from "../../../../core/services/message.service";
 
 @Component({

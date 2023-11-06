@@ -1,32 +1,32 @@
 <div class="container mx-auto my-8">
-  <h1 class="text-3xl font-bold mb-4">Lista de Hoteles</h1>
-  <form #f="ngForm" (ngSubmit)="searchHotels()" class="mb-8">
+    <h1 class="text-3xl font-bold mb-4">Lista de Hoteles</h1>
+    <form #f="ngForm" (ngSubmit)="searchHotels()" class="mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <input [(ngModel)]="searchCriteria.name" [ngModelOptions]="{standalone: true}" placeholder="Nombre del hotel"
+                   type="text">
+            <button class="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-700" type="submit">
+                Buscar Hoteles
+            </button>
+        </div>
+    </form>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <input [(ngModel)]="searchCriteria.name" [ngModelOptions]="{standalone: true}" type="text" placeholder="Nombre del hotel">
-      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-700">
-        Buscar Hoteles
-      </button>
+        <div *ngFor="let hotel of hotels"
+             class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
+            <img [src]="hotel.imageUrl" alt="Hotel" class="w-full h-40 object-cover rounded">
+            <h2 class="text-xl font-semibold mt-2">{{ hotel.name }}</h2>
+            <p class="text-gray-600">{{ hotel.city }}</p>
+            <p class="text-gray-700 my-2">{{ hotel.description }}</p>
+            <!--<p class="text-gray-700">{{ hotel.price | currency }}</p>-->
+            <div class="mt-4 flex justify-end">
+                <button (click)="openCreateHotelModal(hotel)" class="text-blue-500 hover:underline">Editar Hotel
+                </button>
+            </div>
+        </div>
+        <button
+                (click)="openCreateHotelModal()"
+                class="fixed bottom-4 right-4 bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-700"
+        >
+            + Nuevo Hotel
+        </button>
     </div>
-  </form>
-
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div *ngFor="let hotel of hotels"
-         class="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:-translate-y-2 hover:shadow-xl">
-      <img [src]="hotel.imageUrl" alt="Hotel" class="w-full h-40 object-cover rounded">
-      <h2 class="text-xl font-semibold mt-2">{{ hotel.name }}</h2>
-      <p class="text-gray-600">{{ hotel.city }}</p>
-      <p class="text-gray-700 my-2">{{ hotel.description }}</p>
-      <!--<p class="text-gray-700">{{ hotel.price | currency }}</p>-->
-      <div class="mt-4 flex justify-end">
-        <button (click)="openCreateHotelModal(hotel)" class="text-blue-500 hover:underline">Editar Hotel</button>
-      </div>
-    </div>
-    <button
-      (click)="openCreateHotelModal()"
-      class="fixed bottom-4 right-4 bg-blue-500 text-white py-2 px-4 rounded-full shadow-lg hover:bg-blue-700"
-    >
-      + Nuevo Hotel
-    </button>
-  </div>
 </div>

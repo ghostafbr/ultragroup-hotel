@@ -20,11 +20,6 @@ export class HotelService {
     // Obtener hoteles por usuario
     getHotelsByUser(userId: string) {
         return this.fireStore.collection('hotels', ref => ref.where('userId', '==', userId)).snapshotChanges();
-        /*if (!name) {
-            return this.fireStore.collection('hotels', ref => ref.where('userId', '==', userId)).snapshotChanges();
-        } else {
-            return this.fireStore.collection('hotels', ref => ref.where('userId', 'array-contains', userId).where('name', '==', name)).snapshotChanges();
-        }*/
     }
 
     // Crear un hotel
