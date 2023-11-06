@@ -63,20 +63,17 @@ export class HotelListComponent implements OnInit {
   }
 
   searchHotels() {
-    console.log('Criterios de búsqueda:', this.searchCriteria);
     this.hotels = [...this.tempHotels];
 
     if (this.searchCriteria.capacity >= 1) {
       this.hotels.forEach((hotel: Hotel) => {
         this.getRoomsByHotel(hotel);
       });
-      console.log('Hoteles:', this.hotels);
       this.hotels = this.hotels.filter((hotel: Hotel) => {
         return hotel.rooms.some((room: any) => {
           return room && room.available;
         });
       });
-      console.log('Hoteles:', this.hotels);
     }
 
     if (this.searchCriteria.city) {
