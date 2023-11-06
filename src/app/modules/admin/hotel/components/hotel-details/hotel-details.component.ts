@@ -69,7 +69,7 @@ export class HotelDetailsComponent implements OnInit {
     this.roomsArray.push(
       this.fb.group({
         type: [room.type, Validators.required],
-        baseCost: [room.baseCost, Validators.required],
+        baseCost: [room.baseCost, [Validators.required, Validators.min(1)]],
         taxes: [room.taxes, Validators.required],
         available: room.available,
         capacity: [room.capacity, [Validators.required, Validators.min(1)]],
